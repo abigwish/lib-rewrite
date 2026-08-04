@@ -3248,6 +3248,7 @@ function library:toggle(properties)
 		callback = properties.callback or function() end,
 		default = properties.default or false,
 		keybind = properties.keybind or nil,
+		keybind_set = rawget(properties, "keybind") ~= nil,
 		previous_holder = self,
 	}
 
@@ -3349,6 +3350,22 @@ function library:toggle(properties)
 			TextColor3 = Color3.fromRGB(170, 170, 170),
 			BorderColor3 = Color3.fromRGB(0, 0, 0),
 			Text = "[" .. string.lower(key_text) .. "]",
+			TextStrokeTransparency = 0.5,
+			Size = UDim2.new(0, 0, 1, 0),
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			AutomaticSize = Enum.AutomaticSize.X,
+			TextSize = 12,
+			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+		})
+	elseif cfg.keybind_set then
+		keybind_label = library:create("TextLabel", {
+			Parent = right_components,
+			Name = "",
+			FontFace = library.font,
+			TextColor3 = Color3.fromRGB(170, 170, 170),
+			BorderColor3 = Color3.fromRGB(0, 0, 0),
+			Text = "[none]",
 			TextStrokeTransparency = 0.5,
 			Size = UDim2.new(0, 0, 1, 0),
 			BackgroundTransparency = 1,
