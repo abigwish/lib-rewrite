@@ -2098,7 +2098,7 @@ function library:window(properties)
 	library:create("UISizeConstraint", {
 		Parent = old_kblist,
 		Name = "",
-		MinSize = Vector2.new(190, 100),
+		MinSize = Vector2.new(190, 140),
 	})
 
 	local inline1 = library:create("Frame", {
@@ -2115,14 +2115,13 @@ function library:window(properties)
 		BorderColor3 = Color3.fromRGB(34, 34, 34),
 		Size = UDim2.new(1, 0, 0, 2),
 		BorderSizePixel = 0,
-		ZIndex = 0,
 		BackgroundColor3 = themes.preset.accent,
 	})
 
 	library:apply_theme(accent_line, "accent", "BackgroundColor3")
 
 	local name = library:create("TextLabel", {
-		Parent = inline1,
+		Parent = accent_line,
 		Name = "",
 		FontFace = library.font,
 		TextColor3 = Color3.fromRGB(170, 170, 170),
@@ -2143,7 +2142,8 @@ function library:window(properties)
 		Name = "",
 		Position = UDim2.new(0, 2, 0, 2),
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
-		Size = UDim2.new(1, -4, 1, -4),
+		Size = UDim2.new(1, -4, 0, 0),
+		AutomaticSize = Enum.AutomaticSize.Y,
 		BorderSizePixel = 0,
 		BackgroundColor3 = Color3.fromRGB(26, 26, 26),
 	})
@@ -2153,7 +2153,8 @@ function library:window(properties)
 		Name = "",
 		Position = UDim2.new(0, 2, 0, 2),
 		BorderColor3 = Color3.fromRGB(57, 57, 57),
-		Size = UDim2.new(1, -4, 1, -4),
+		Size = UDim2.new(1, -4, 0, 0),
+		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundColor3 = Color3.fromRGB(26, 26, 26),
 	})
 
@@ -2162,7 +2163,8 @@ function library:window(properties)
 		Name = "",
 		Position = UDim2.new(0, 6, 0, 6),
 		BorderColor3 = Color3.fromRGB(19, 19, 19),
-		Size = UDim2.new(1, -12, 1, -12),
+		Size = UDim2.new(1, -12, 0, 0),
+		AutomaticSize = Enum.AutomaticSize.Y,
 		BorderSizePixel = 0,
 		BackgroundColor3 = Color3.fromRGB(19, 19, 19),
 	})
