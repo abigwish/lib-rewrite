@@ -3339,23 +3339,25 @@ function library:toggle(properties)
 	library:apply_theme(glow, "accent", "ImageColor3")
 
 	local keybind_label
-	local key_text = if cfg.keybind then keys[cfg.keybind] or tostring(cfg.keybind):gsub("Enum.KeyCode.", "") else "none"
+	if cfg.keybind then
+		local key_text = keys[cfg.keybind] or tostring(cfg.keybind):gsub("Enum.KeyCode.", "")
 
-	keybind_label = library:create("TextLabel", {
-		Parent = right_components,
-		Name = "",
-		FontFace = library.font,
-		TextColor3 = Color3.fromRGB(170, 170, 170),
-		BorderColor3 = Color3.fromRGB(0, 0, 0),
-		Text = "[" .. string.lower(key_text) .. "]",
-		TextStrokeTransparency = 0.5,
-		Size = UDim2.new(0, 0, 1, 0),
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		AutomaticSize = Enum.AutomaticSize.X,
-		TextSize = 12,
-		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-	})
+		keybind_label = library:create("TextLabel", {
+			Parent = right_components,
+			Name = "",
+			FontFace = library.font,
+			TextColor3 = Color3.fromRGB(170, 170, 170),
+			BorderColor3 = Color3.fromRGB(0, 0, 0),
+			Text = "[" .. string.lower(key_text) .. "]",
+			TextStrokeTransparency = 0.5,
+			Size = UDim2.new(0, 0, 1, 0),
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			AutomaticSize = Enum.AutomaticSize.X,
+			TextSize = 12,
+			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+		})
+	end
 
 	local bottom_components = library:create("Frame", {
 		Parent = object,
