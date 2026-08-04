@@ -3375,17 +3375,10 @@ function library:toggle(properties)
 			return
 		end
 
-		if cfg.keybind then
+		if cfg.keybind and cfg.enabled then
 			local key_text = keys[cfg.keybind] or tostring(cfg.keybind):gsub("Enum.KeyCode.", ""):gsub("UserInputType.", "")
 
-			keybind_entry.change_text(
-				"["
-					.. string.lower(key_text)
-					.. "] "
-					.. cfg.name
-					.. " (toggle) "
-					.. (cfg.enabled and "[ON]" or "[OFF]")
-			)
+			keybind_entry.change_text("[" .. string.lower(key_text) .. "] " .. cfg.name .. " (toggle)")
 			keybind_entry.set_visible(true)
 		else
 			keybind_entry.set_visible(false)
