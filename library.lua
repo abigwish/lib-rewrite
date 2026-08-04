@@ -2249,6 +2249,8 @@ function library:window(properties)
 		playerlist.Visible = flags["player_list"] and bool or false
 	end
 
+	local playerlist_visible = playerlist.Visible
+
 	library:connection(uis.InputBegan, function(input, game_event)
 		if game_event then
 			return
@@ -2262,7 +2264,13 @@ function library:window(properties)
 			return
 		end
 
-		cfg.set_menu_visibility(not WINDOW_PATH.Visible, nil)
+		if WINDOW_PATH.Visible then
+			playerlist_visible = playerlist.Visible
+			cfg.set_menu_visibility(false, nil)
+		else
+			cfg.set_menu_visibility(true, nil)
+			playerlist.Visible = playerlist_visible
+		end
 	end)
 
 	return setmetatable(cfg, library)
@@ -3517,29 +3525,27 @@ function library:toggle(properties)
 		update_keybind_entry()
 	end
 
-	if cfg.keybind then
-		library:connection(uis.InputBegan, function(input, game_event)
-			if game_event then
-				return
-			end
+	library:connection(uis.InputBegan, function(input, game_event)
+		if game_event then
+			return
+		end
 
-			if library.binding_active then
-				return
-			end
+		if library.binding_active then
+			return
+		end
 
-			local matches
-			if input.UserInputType == Enum.UserInputType.Keyboard then
-				matches = input.KeyCode == cfg.keybind
-			else
-				matches = input.UserInputType == cfg.keybind
-			end
+		local matches
+		if input.UserInputType == Enum.UserInputType.Keyboard then
+			matches = input.KeyCode == cfg.keybind
+		else
+			matches = input.UserInputType == cfg.keybind
+		end
 
-			if matches then
-				cfg.enabled = not cfg.enabled
-				cfg.set(cfg.enabled)
-			end
-		end)
-	end
+		if matches then
+			cfg.enabled = not cfg.enabled
+			cfg.set(cfg.enabled)
+		end
+	end)
 
 	self.previous_holder = left_components
 	self.bottom_holder = bottom_components
