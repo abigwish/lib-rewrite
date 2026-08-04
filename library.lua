@@ -3383,9 +3383,14 @@ function library:toggle(properties)
 		update_keybind_label()
 
 		keybind_label.MouseButton1Click:Connect(function()
+			if cfg.binding then
+				cfg.binding:Disconnect()
+				cfg.binding = nil
+			end
+
 			keybind_label.Text = "..."
 
-			local binding = library:connection(uis.InputBegan, function(input, game_event)
+			cfg.binding = library:connection(uis.InputBegan, function(input, game_event)
 				if game_event then
 					return
 				end
@@ -3402,7 +3407,11 @@ function library:toggle(properties)
 					return
 				end
 
-				binding:Disconnect()
+				if cfg.binding then
+					cfg.binding:Disconnect()
+					cfg.binding = nil
+				end
+
 				update_keybind_label()
 			end)
 		end)
