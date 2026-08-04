@@ -2100,25 +2100,6 @@ function library:window(properties)
 		MinSize = Vector2.new(190, 55),
 	})
 
-	local glow = library:create("ImageLabel", {
-		Parent = old_kblist,
-		Name = "",
-		ImageColor3 = themes.preset.accent,
-		ScaleType = Enum.ScaleType.Slice,
-		ImageTransparency = 0.8999999761581421,
-		BorderColor3 = Color3.fromRGB(0, 0, 0),
-		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-		Image = "http://www.roblox.com/asset/?id=18245826428",
-		BackgroundTransparency = 1,
-		Position = UDim2.new(0, -20, 0, -20),
-		Size = UDim2.new(1, 40, 0, 42),
-		ZIndex = 2,
-		BorderSizePixel = 0,
-		SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79)),
-	})
-
-	library:apply_theme(glow, "accent", "ImageColor3")
-
 	local inline1 = library:create("Frame", {
 		Parent = old_kblist,
 		Name = "",
@@ -2133,6 +2114,7 @@ function library:window(properties)
 		BorderColor3 = Color3.fromRGB(34, 34, 34),
 		Size = UDim2.new(1, 0, 0, 2),
 		BorderSizePixel = 0,
+		ZIndex = 1,
 		BackgroundColor3 = themes.preset.accent,
 	})
 
