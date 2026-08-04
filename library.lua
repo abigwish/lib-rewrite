@@ -1519,6 +1519,7 @@ function library:window(properties)
 		BorderColor3 = Color3.fromRGB(26, 26, 26),
 		Size = UDim2.new(1, -8, 1, -8),
 		BorderSizePixel = 2,
+		ClipsDescendants = true,
 		BackgroundColor3 = Color3.fromRGB(26, 26, 26),
 	})
 
@@ -2097,7 +2098,7 @@ function library:window(properties)
 	library:create("UISizeConstraint", {
 		Parent = old_kblist,
 		Name = "",
-		MinSize = Vector2.new(190, 55),
+		MinSize = Vector2.new(190, 100),
 	})
 
 	local inline1 = library:create("Frame", {
@@ -2114,7 +2115,7 @@ function library:window(properties)
 		BorderColor3 = Color3.fromRGB(34, 34, 34),
 		Size = UDim2.new(1, 0, 0, 2),
 		BorderSizePixel = 0,
-		ZIndex = 1,
+		ZIndex = 0,
 		BackgroundColor3 = themes.preset.accent,
 	})
 
