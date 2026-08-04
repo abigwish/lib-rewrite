@@ -3517,6 +3517,30 @@ function library:toggle(properties)
 		update_keybind_entry()
 	end
 
+	if cfg.keybind then
+		library:connection(uis.InputBegan, function(input, game_event)
+			if game_event then
+				return
+			end
+
+			if library.binding_active then
+				return
+			end
+
+			local matches
+			if input.UserInputType == Enum.UserInputType.Keyboard then
+				matches = input.KeyCode == cfg.keybind
+			else
+				matches = input.UserInputType == cfg.keybind
+			end
+
+			if matches then
+				cfg.enabled = not cfg.enabled
+				cfg.set(cfg.enabled)
+			end
+		end)
+	end
+
 	self.previous_holder = left_components
 	self.bottom_holder = bottom_components
 	self.right_holder = right_components
