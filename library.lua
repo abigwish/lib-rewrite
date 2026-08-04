@@ -2249,6 +2249,22 @@ function library:window(properties)
 		playerlist.Visible = flags["player_list"] and bool or false
 	end
 
+	library:connection(uis.InputBegan, function(input, game_event)
+		if game_event then
+			return
+		end
+
+		if input.KeyCode ~= Enum.KeyCode.LeftAlt then
+			return
+		end
+
+		if library.binding_active then
+			return
+		end
+
+		cfg.set_menu_visibility(not WINDOW_PATH.Visible, nil)
+	end)
+
 	return setmetatable(cfg, library)
 end
 
@@ -3412,6 +3428,7 @@ function library:toggle(properties)
 			end
 
 			keybind_label.Text = "..."
+			library.binding_active = true
 
 			cfg.binding = library:connection(uis.InputBegan, function(input, game_event)
 				if game_event then
@@ -3433,6 +3450,7 @@ function library:toggle(properties)
 				if cfg.binding then
 					cfg.binding:Disconnect()
 					cfg.binding = nil
+					library.binding_active = false
 				end
 
 				ensure_keybind_entry()
@@ -5182,6 +5200,7 @@ function library:keybind(properties)
 	keybind.MouseButton1Down:Connect(function()
 		task.wait()
 		keybind.Text = "..."
+		library.binding_active = true
 
 		cfg.binding = library:connection(uis.InputBegan, function(input, game_event)
 			if input.UserInputType == Enum.UserInputType.Keyboard then
@@ -5203,6 +5222,7 @@ function library:keybind(properties)
 			})
 			cfg.binding:Disconnect()
 			cfg.binding = nil
+			library.binding_active = false
 		end)
 	end)
 
