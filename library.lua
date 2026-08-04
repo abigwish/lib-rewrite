@@ -3241,6 +3241,14 @@ function library:hitpart_picker(properties)
 end
 
 function library:toggle(properties)
+	local keybind_set = false
+	for key in next, properties do
+		if key == "keybind" then
+			keybind_set = true
+			break
+		end
+	end
+
 	local cfg = {
 		enabled = properties.enabled or nil,
 		name = properties.name or "Toggle",
@@ -3248,7 +3256,7 @@ function library:toggle(properties)
 		callback = properties.callback or function() end,
 		default = properties.default or false,
 		keybind = properties.keybind or nil,
-		keybind_set = rawget(properties, "keybind") ~= nil,
+		keybind_set = keybind_set,
 		previous_holder = self,
 	}
 
@@ -4703,13 +4711,16 @@ function library:colorpicker(properties)
 	task.spawn(function()
 		while true do
 			if cfg.animation ~= "normal" then
+				local cycle = tick() % 1
+				local pulse = math.abs(math.sin(tick()))
+
 				cfg.set(
 					hsv(
-						cfg.animation == "rainbow" and library.sin or h,
+						cfg.animation == "rainbow" and cycle or h,
 						cfg.animation == "rainbow" and 1 or s,
-						cfg.animation == "fade" and library.sin or v
+						cfg.animation == "fade" and pulse or v
 					),
-					cfg.animation == "fade_alpha" and library.sin
+					cfg.animation == "fade_alpha" and pulse
 				)
 			end
 			task.wait()
