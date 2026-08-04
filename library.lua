@@ -2295,10 +2295,10 @@ function library:new_keybind(properties)
 	end
 
 	function keyName(key)
-		local text = tostring(key) ~= "Enums" and (keys[key] or tostring(key):gsub("Enum.", "")) or nil
+		local text = key and tostring(key) ~= "Enums" and (keys[key] or tostring(key):gsub("Enum.", "")) or nil
 		local __text = text and (tostring(text):gsub("KeyCode.", ""):gsub("UserInputType.", ""))
 
-		return __text or "..."
+		return __text or "none"
 	end
 
 	-- Shit ass function
@@ -3348,40 +3348,69 @@ function library:toggle(properties)
 	library:apply_theme(glow, "accent", "ImageColor3")
 
 	local keybind_label
-	if cfg.keybind then
-		local key_text = keys[cfg.keybind] or tostring(cfg.keybind):gsub("Enum.KeyCode.", "")
 
-		keybind_label = library:create("TextLabel", {
+	local function update_keybind_label()
+		if not keybind_label then
+			return
+		end
+
+		if cfg.keybind then
+			local key_text = keys[cfg.keybind] or tostring(cfg.keybind):gsub("Enum.KeyCode.", "")
+			keybind_label.Text = "[" .. string.lower(key_text) .. "]"
+		else
+			keybind_label.Text = "[none]"
+		end
+	end
+
+	if cfg.keybind or cfg.keybind_set then
+		keybind_label = library:create("TextButton", {
 			Parent = right_components,
 			Name = "",
 			FontFace = library.font,
 			TextColor3 = Color3.fromRGB(170, 170, 170),
 			BorderColor3 = Color3.fromRGB(0, 0, 0),
-			Text = "[" .. string.lower(key_text) .. "]",
+			Text = "",
 			TextStrokeTransparency = 0.5,
 			Size = UDim2.new(0, 0, 1, 0),
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
 			AutomaticSize = Enum.AutomaticSize.X,
+			AutoButtonColor = false,
 			TextSize = 12,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 		})
-	elseif cfg.keybind_set then
-		keybind_label = library:create("TextLabel", {
-			Parent = right_components,
-			Name = "",
-			FontFace = library.font,
-			TextColor3 = Color3.fromRGB(170, 170, 170),
-			BorderColor3 = Color3.fromRGB(0, 0, 0),
-			Text = "[none]",
-			TextStrokeTransparency = 0.5,
-			Size = UDim2.new(0, 0, 1, 0),
-			BackgroundTransparency = 1,
-			BorderSizePixel = 0,
-			AutomaticSize = Enum.AutomaticSize.X,
-			TextSize = 12,
-			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-		})
+
+		update_keybind_label()
+
+		keybind_label.MouseButton1Click:Connect(function()
+			keybind_label.Text = "..."
+
+			local binding = library:connection(uis.InputBegan, function(input, game_event)
+				if game_event then
+					return
+				end
+
+				if input.UserInputType == Enum.UserInputType.Keyboard then
+					cfg.keybind = input.KeyCode
+				elseif
+					input.UserInputType == Enum.UserInputType.MouseButton1
+					or input.UserInputType == Enum.UserInputType.MouseButton2
+					or input.UserInputType == Enum.UserInputType.MouseButton3
+				then
+					cfg.keybind = input.UserInputType
+				else
+					return
+				end
+
+				binding:Disconnect()
+				update_keybind_label()
+			end)
+		end)
+
+		keybind_label.MouseButton2Click:Connect(function()
+			cfg.keybind = nil
+			update_keybind_label()
+		end)
 	end
 
 	local bottom_components = library:create("Frame", {
