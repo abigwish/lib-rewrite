@@ -6,6 +6,7 @@ local gui_service = game:GetService("GuiService")
 local lighting = game:GetService("Lighting")
 local run = game:GetService("RunService")
 local stats = game:GetService("Stats")
+local text_service = game:GetService("TextService")
 local coregui = game:GetService("CoreGui")
 local debris = game:GetService("Debris")
 local tween_service = game:GetService("TweenService")
@@ -434,6 +435,11 @@ function library:window(properties)
 
 	local animated_text = library:animation(cfg.name)
 
+	local watermark_width = (#cfg.name * 8) + 30
+	pcall(function()
+		watermark_width = text_service:GetTextBounds(cfg.name, library.font, 12, Vector2.new(1000, 1000)).X + 26
+	end)
+
 	-- watermark
 	local __holder = library:create("Frame", {
 		Parent = library.gui,
@@ -452,7 +458,7 @@ function library:window(properties)
 		Active = true,
 		Draggable = true,
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
-		Size = UDim2.new(0, ((#animated_text / 2) * 5) + 13, 0, 40),
+		Size = UDim2.new(0, watermark_width, 0, 40),
 		BackgroundColor3 = Color3.fromRGB(40, 40, 40),
 	})
 
@@ -3333,25 +3339,23 @@ function library:toggle(properties)
 	library:apply_theme(glow, "accent", "ImageColor3")
 
 	local keybind_label
-	if cfg.keybind then
-		local key_text = keys[cfg.keybind] or tostring(cfg.keybind):gsub("Enum.KeyCode.", "")
+	local key_text = if cfg.keybind then keys[cfg.keybind] or tostring(cfg.keybind):gsub("Enum.KeyCode.", "") else "none"
 
-		keybind_label = library:create("TextLabel", {
-			Parent = right_components,
-			Name = "",
-			FontFace = library.font,
-			TextColor3 = Color3.fromRGB(170, 170, 170),
-			BorderColor3 = Color3.fromRGB(0, 0, 0),
-			Text = "[" .. string.lower(key_text) .. "]",
-			TextStrokeTransparency = 0.5,
-			Size = UDim2.new(0, 0, 1, 0),
-			BackgroundTransparency = 1,
-			BorderSizePixel = 0,
-			AutomaticSize = Enum.AutomaticSize.X,
-			TextSize = 12,
-			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-		})
-	end
+	keybind_label = library:create("TextLabel", {
+		Parent = right_components,
+		Name = "",
+		FontFace = library.font,
+		TextColor3 = Color3.fromRGB(170, 170, 170),
+		BorderColor3 = Color3.fromRGB(0, 0, 0),
+		Text = "[" .. string.lower(key_text) .. "]",
+		TextStrokeTransparency = 0.5,
+		Size = UDim2.new(0, 0, 1, 0),
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		AutomaticSize = Enum.AutomaticSize.X,
+		TextSize = 12,
+		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+	})
 
 	local bottom_components = library:create("Frame", {
 		Parent = object,
@@ -3393,21 +3397,6 @@ function library:toggle(properties)
 
 		cfg.set(cfg.enabled)
 	end)
-
-	if cfg.keybind then
-		library:connection(uis.InputBegan, function(input, game_event)
-			if
-				not game_event
-				and input.UserInputType == Enum.UserInputType.Keyboard
-				and input.KeyCode == cfg.keybind
-				and not cfg.enabled
-			then
-				cfg.enabled = true
-
-				cfg.set(true)
-			end
-		end)
-	end
 
 	cfg.enabled = cfg.default
 
@@ -4632,7 +4621,6 @@ function library:colorpicker(properties)
 
 	cfg.saved_color = hsv(h, s, v)
 	local selected = normal
-	flags[cfg.flag]["animation"] = "normal"
 
 	rainbow.MouseButton1Down:Connect(function()
 		selected.BackgroundTransparency = 1
@@ -4640,7 +4628,6 @@ function library:colorpicker(properties)
 		rainbow.BackgroundTransparency = 0
 
 		cfg.animation = "rainbow"
-		flags[cfg.flag]["animation"] = "rainbow"
 		cfg.saved_color = hsv(s, s, v)
 	end)
 
@@ -4650,7 +4637,6 @@ function library:colorpicker(properties)
 		fade_alpha.BackgroundTransparency = 0
 
 		cfg.animation = "fade_alpha"
-		flags[cfg.flag]["animation"] = "fade_alpha"
 		cfg.saved_color = hsv(s, s, v)
 	end)
 
@@ -4660,7 +4646,6 @@ function library:colorpicker(properties)
 		fade.BackgroundTransparency = 0
 
 		cfg.animation = "fade"
-		flags[cfg.flag]["animation"] = "fade"
 		cfg.saved_color = hsv(s, s, v)
 	end)
 
@@ -4670,7 +4655,6 @@ function library:colorpicker(properties)
 		normal.BackgroundTransparency = 0
 
 		cfg.animation = "normal"
-		flags[cfg.flag]["animation"] = "normal"
 		cfg.set(cfg.saved_color)
 	end)
 
