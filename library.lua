@@ -3362,6 +3362,36 @@ function library:toggle(properties)
 		end
 	end
 
+	local keybind_entry
+
+	local function ensure_keybind_entry()
+		if not keybind_entry then
+			keybind_entry = library:new_keybind({})
+		end
+	end
+
+	local function update_keybind_entry()
+		if not keybind_entry then
+			return
+		end
+
+		if cfg.keybind then
+			local key_text = keys[cfg.keybind] or tostring(cfg.keybind):gsub("Enum.KeyCode.", ""):gsub("UserInputType.", "")
+
+			keybind_entry.change_text(
+				"["
+					.. string.lower(key_text)
+					.. "] "
+					.. cfg.name
+					.. " (toggle) "
+					.. (cfg.enabled and "[ON]" or "[OFF]")
+			)
+			keybind_entry.set_visible(true)
+		else
+			keybind_entry.set_visible(false)
+		end
+	end
+
 	if cfg.keybind or cfg.keybind_set then
 		keybind_label = library:create("TextButton", {
 			Parent = right_components,
@@ -3412,6 +3442,8 @@ function library:toggle(properties)
 					cfg.binding = nil
 				end
 
+				ensure_keybind_entry()
+				update_keybind_entry()
 				update_keybind_label()
 			end)
 		end)
@@ -3419,6 +3451,7 @@ function library:toggle(properties)
 		keybind_label.MouseButton2Click:Connect(function()
 			cfg.keybind = nil
 			update_keybind_label()
+			update_keybind_entry()
 		end)
 	end
 
@@ -3449,6 +3482,7 @@ function library:toggle(properties)
 		flags[cfg.flag] = bool
 
 		cfg.callback(bool)
+		update_keybind_entry()
 	end
 
 	library:connection(object.MouseButton1Click, function()
@@ -3466,6 +3500,11 @@ function library:toggle(properties)
 	cfg.enabled = cfg.default
 
 	cfg.set(cfg.default)
+
+	if cfg.keybind then
+		ensure_keybind_entry()
+		update_keybind_entry()
+	end
 
 	self.previous_holder = left_components
 	self.bottom_holder = bottom_components
