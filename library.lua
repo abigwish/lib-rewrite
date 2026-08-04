@@ -3542,8 +3542,9 @@ function library:toggle(properties)
 		end
 
 		if matches then
-			cfg.enabled = not cfg.enabled
-			cfg.set(cfg.enabled)
+			local toggled = not flags[cfg.flag]
+			flags[cfg.flag] = toggled
+			cfg.callback(toggled)
 		end
 	end)
 
